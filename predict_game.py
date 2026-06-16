@@ -8,15 +8,15 @@ from player_pitching import pitcher_name_to_id
 model = joblib.load('mlb_run_model.pkl')
 
 def predict_game(home_team, away_team, home_sp_name, away_sp_name):
-    # Step 1 - get team features
+# get team features
     home_features = team_stats_df.loc[home_team]
     away_features = team_stats_df.loc[away_team]
     
-    # Step 2 - get SP features
+    #get SP features
     home_sp_id = pitcher_name_to_id.get(home_sp_name)
     away_sp_id = pitcher_name_to_id.get(away_sp_name)
     
-    # Step 3 - fallback to team avg if SP not found
+    #team avg if SP not found
     if home_sp_id is None or home_sp_id not in sp_stats_df.index:
         home_sp = team_sp_avg_df.loc[home_team]
     else:
@@ -27,7 +27,7 @@ def predict_game(home_team, away_team, home_sp_name, away_sp_name):
     else:
         away_sp = sp_stats_df.loc[away_sp_id]
     
-    # Step 4 - build row
+    #build row
     row = {}
     
     for feature in team_stats_df.columns:
@@ -41,7 +41,7 @@ def predict_game(home_team, away_team, home_sp_name, away_sp_name):
         row[f"away_sp_{feature}"] = away_sp[feature]
         row[f"diff_sp_{feature}"] = home_sp[feature] - away_sp[feature]
     
-    # Step 5 - predict
+    #predict
     df = pd.DataFrame([row]).fillna(0)
     pred = model.predict(df)
     
@@ -55,8 +55,8 @@ def predict_game(home_team, away_team, home_sp_name, away_sp_name):
 
 # test it
 predict_game(
-    'Philadelphia Phillies',
-    'Milwaukee Brewers', 
-    'Andrew Painter',
-    'Jacob Misiorowski'
+    'Philadelphia Phillies', #home
+    'Milwaukee Brewers',     #away
+    'Andrew Painter',        # home SP
+    'Jacob Misiorowski '     # away SP
 )

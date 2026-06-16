@@ -1,11 +1,23 @@
-# MLB Game Score Prediction Model
-A machine learning pipeline that predicts MLB game scores using team statistics, Sagarin-style power ratings, and starting pitcher matchups. Built entirely in Python using the MLB Stats API, scikit-learn, and Optuna.
+# CONTENTS
+    1. Description
+    2. Pipeline Overview (purpose of each file)
+    3. Execution order
+    4. Instructions
+        - run_all.py instructions
+        - how to make a prediction
 
 
-## Pipeline Overview
 
+# 1. Description
+## MLB Game Score Prediction Model Description
+A machine learning pipeline that predicts MLB game scores using team statistics, Sagarin-style power ratings, and starting pitcher matchups. Built entirely in Python using the MLB Stats API, scikit-learn, and Optuna. Users can use provided spreadsheets(jsons) or rebuild using "run_all"
+
+
+
+
+# 2. Pipeline Overview
 ### 1. Sagarin Ratings (`sagarin_model.py`)
-Pulls multiple seasons of game results from the MLB Stats API and solves for team power ratings using least squares regression. Recent seasons are weighted more heavily. Outputs `sagarin_ratings.json`.
+Pulls multiple seasons of game results from the MLB Stats API and solves for team power ratings using least squares regression (Sagarin ratings). Recent seasons are weighted more heavily. Outputs `sagarin_ratings.json`.
 
 ### 2. Player & Team Mapping (`players_to_team.py`)
 Maps every player to their respective team roster using the MLB Stats API. Outputs `team_data.json`.
@@ -26,6 +38,33 @@ Pulls every game from the current season and constructs a game level dataset mat
 Trains a `MultiOutputRegressor` wrapping a `RandomForestRegressor` to simultaneously predict home and away runs. Hyperparameters tuned with Optuna and cross validation.
 
 
+
+
+
+
+# Instructions
+
+## run_all instructions
+    To rebuild the model run "run_all.py" 
+        - REBUILD TIME 20-30min
+            - all spreadsheets will be overwritten
+            - sample prediction will display if successful
+
+## how to make a prediction
+    In "predict_game.py" 
+        - Simply specify 
+            - Home Team, Away Team, Home SP, Away SP
+            - See method example
+
+
+            - predict_game(
+    'Philadelphia Phillies', #home
+    'Milwaukee Brewers',     #away
+    'Andrew Painter',        # home SP
+    'Jacob Misiorowski '     # away SP
+)
+
+
 ## Data Pipeline Execution Order
 sagarin_model.py
 players_to_team.py
@@ -42,3 +81,6 @@ predict_game.py
 ## MAE
 Home MAE: ~2.42
 Away MAE: ~2.60
+
+
+
