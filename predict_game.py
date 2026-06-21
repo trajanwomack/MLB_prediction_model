@@ -3,11 +3,44 @@ import pandas as pd
 from team_features import team_stats_df
 from player_pitching import sp_stats_df, team_sp_avg_df
 from player_pitching import pitcher_name_to_id
+from difflib import get_close_matches
+
 
 # load saved model
 model = joblib.load('mlb_run_model.pkl')
 
+
+
+#team name mispelling safety
+def find_team(team_name,team_name_list): 
+    if team_name in team_name_list:
+        return team_name
+    
+    team_name_matches = get_close_matches(team_name,team_name_list, n=1, cutoff =.6)
+
+    if team_name_matches:
+        print (f"Team '{team_name}' was mispelled, Assuming you meant '{team_name_matches[0]}'")
+        return team_name_matches[0]
+
+    else:
+        print(f"Team '{team_name}' was not found even after closest matching")
+        return None
+
+
+
 def predict_game(home_team, away_team, home_sp_name, away_sp_name):
+
+    team_name_list = team_stats_df.index.tolist() #get valid teams
+
+    home_team = find_team(home_team, team_name_list) #wrap home/away team in spelling saftey
+    away_team = find_team(away_team, team_name_list)
+
+    if home_team is None or away_team is None:
+        print("Spelling error rerun with valid names")
+        return None
+
+
+
 # get team features
     home_features = team_stats_df.loc[home_team]
     away_features = team_stats_df.loc[away_team]
@@ -55,8 +88,8 @@ def predict_game(home_team, away_team, home_sp_name, away_sp_name):
 
 # test it
 predict_game(
-    'Philadelphia Phillies', #home
+    'Braves', #home
     'Milwaukee Brewers',     #away
-    'Andrew Painter',        # home SP
-    'Jacob Misiorowski '     # away SP
+    'Chris Sale',        # home SP
+    'Kyle Harrison'     # away SP
 )
