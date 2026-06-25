@@ -13,17 +13,37 @@ model = joblib.load('mlb_run_model.pkl')
 
 #team name mispelling safety
 def find_team(team_name,team_name_list): 
+
+    #if exists
     if team_name in team_name_list:
         return team_name
     
+
+    #if missppelled
     team_name_matches = get_close_matches(team_name,team_name_list, n=1, cutoff =.6)
 
     if team_name_matches:
         print (f"Team '{team_name}' was mispelled, Assuming you meant '{team_name_matches[0]}'")
         return team_name_matches[0]
 
+    #no team 
     else:
         print(f"Team '{team_name}' was not found even after closest matching")
+        return None
+    
+
+def find_pitcher(sp_name,sp_list):
+    if sp_name in sp_list:
+        return sp_name
+    
+    sp_name_matches= get_close_matches(sp_name, sp_list, n=1, cutoff=.6)
+
+    if sp_name_matches:
+        print(f"Pitcher: '{sp_name}' was mispelled, Assuming you meant '{sp_name_matches[0]}'")
+        return sp_name_matches [0]
+    
+    else:
+        print (f"Pitcher '{sp_name}' was not found even after closest using a team avg starting pitcher")
         return None
 
 
@@ -31,9 +51,12 @@ def find_team(team_name,team_name_list):
 def predict_game(home_team, away_team, home_sp_name, away_sp_name):
 
     team_name_list = team_stats_df.index.tolist() #get valid teams
+    sp_name_list = sp_stats_df['name'].tolist() #get valid sp's
 
     home_team = find_team(home_team, team_name_list) #wrap home/away team in spelling saftey
     away_team = find_team(away_team, team_name_list)
+    home_sp_name = find_pitcher(home_sp_name, sp_name_list)#wrap pitcher in spelling saftey before id fall back 
+    away_sp_name = find_pitcher(away_sp_name, sp_name_list)
 
     if home_team is None or away_team is None:
         print("Spelling error rerun with valid names")
@@ -90,6 +113,6 @@ def predict_game(home_team, away_team, home_sp_name, away_sp_name):
 predict_game(
     'Braves', #home
     'Milwaukee Brewers',     #away
-    'Chris Sale',        # home SP
+    'Martin Perez',        # home SP
     'Kyle Harrison'     # away SP
 )
