@@ -10,7 +10,7 @@ def get_sagarin_ratings():
 
 
     seasons = [
-        (2026, 1.0,  '03/25/2026', '06/12/2026'),  # yesterday
+        (2026, 1.0,  '03/25/2026', '06/27/2026'),  # yesterday
         (2025, 0.30, '03/27/2025', '09/28/2025'),
         (2024, 0.15, '03/28/2024', '09/29/2024'),
         (2023, 0.10, '04/01/2023', '10/01/2023'),
@@ -104,26 +104,31 @@ def get_sagarin_ratings():
 
 
 
-    def sort_by_max(final_ratings, reverse=False):
-        return sorted(final_ratings, key=lambda x: x[1], reverse=reverse)
-
-
-    sorted_ratings = sort_by_max(final_ratings, reverse=True)
-    for team, rating in sorted_ratings:
-        print(f"{team}: {rating: .2f}")
-
-
 
     return (final_ratings, team_list,team_to_index, ratings)
 
 
 
 
-final_ratings, team_list, team_to_index, ratings = get_sagarin_ratings()
+def sort_by_max(final_ratings, reverse=False):
+        return sorted(final_ratings, key=lambda x: x[1], reverse=reverse)
 
-sagarin_dict = {}
-for team, rating in final_ratings:
-    sagarin_dict[team] = float(rating)
 
-with open('sagarin_ratings.json', 'w') as f:
-    json.dump(sagarin_dict, f)
+
+if __name__ == "__main__":
+    final_ratings, team_list, team_to_index, ratings = get_sagarin_ratings()
+
+
+
+    sorted_ratings = sort_by_max(final_ratings, reverse=True)
+
+    for team, rating in sorted_ratings:
+        print(f"{team}: {rating: .2f}")
+
+
+    sagarin_dict = {}
+    for team, rating in final_ratings:
+        sagarin_dict[team] = float(rating)
+
+    with open('sagarin_ratings.json', 'w') as f:
+        json.dump(sagarin_dict, f)

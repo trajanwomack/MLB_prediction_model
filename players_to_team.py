@@ -1,16 +1,8 @@
-import numpy as np
+
 import time
 
-
-
-import warnings
 import statsapi
 
-warnings.filterwarnings('ignore')
-
-
-RANDOM_STATE = 42
-np.random.seed(RANDOM_STATE)
 
 #call the sagarin model
 from sagarin_model import get_sagarin_ratings

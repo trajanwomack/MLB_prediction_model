@@ -39,11 +39,9 @@ def find_pitcher(sp_name,sp_list):
     sp_name_matches= get_close_matches(sp_name, sp_list, n=1, cutoff=.6)
 
     if sp_name_matches:
-        print(f"Pitcher: '{sp_name}' was mispelled, Assuming you meant '{sp_name_matches[0]}'")
         return sp_name_matches [0]
     
     else:
-        print (f"Pitcher '{sp_name}' was not found even after closest using a team avg starting pitcher")
         return None
 
 
@@ -110,9 +108,10 @@ def predict_game(home_team, away_team, home_sp_name, away_sp_name):
     return home_runs, away_runs
 
 # test it
-predict_game(
-    'Braves', #home
-    'Milwaukee Brewers',     #away
-    'Martin Perez',        # home SP
-    'Kyle Harrison'     # away SP
-)
+if __name__ == "__main__": # allows for importation to run_easy_prediction
+    predict_game(
+        'Cardinals', #home
+        'Diamondbacks',     #away
+        'Martin Perez',        # home SP
+        'Kyle Harrison'     # away SP
+    )

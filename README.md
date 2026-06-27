@@ -45,10 +45,12 @@ Trains a `MultiOutputRegressor` wrapping a `RandomForestRegressor` to simultaneo
 # Instructions
 
 ## run_all instructions
-    To rebuild the model run "run_all.py" 
+    To update stats rebuild the model run "run_all.py" 
         - REBUILD TIME 20-30min
             - all spreadsheets will be overwritten
-            - sample prediction will display if successful
+            - Stats will be updated to live
+            -Thousands of API pulls so be patient
+            -After complete 
 
 ## how to make a prediction
     In "predict_game.py" 

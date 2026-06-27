@@ -3,7 +3,7 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import mean_absolute_error
-#import pandas as pd
+import pandas as pd
 import optuna
 import joblib
 
@@ -109,32 +109,35 @@ final_model = MultiOutputRegressor(
 
 final_model.fit(X_train, y_train)
 
-print("Best Params:", study.best_params)
-print("Best CV MAE:", study.best_value)
+importances = final_model.estimators_[0].feature_importances_
+feature_imp = pd.Series(importances, index = X.columns)
+print(feature_imp.sort_values(ascending=False).head(20))
+#print("Best Params:", study.best_params)
+#print("Best CV MAE:", study.best_value)
 
-preds = final_model.predict(X_test)
-
-
-
-
-home_mae = mean_absolute_error(
-    y_test["home_runs"],
-    preds[:,0]
-)
-
-away_mae = mean_absolute_error(
-    y_test["away_runs"],
-    preds[:,1]
-)
-
-print("Home MAE:", home_mae)
-print("Away MAE", away_mae)
-overall_mae = (home_mae + away_mae) / 2
-print("Overall MAE:", overall_mae)
+#preds = final_model.predict(X_test)
 
 
 
-joblib.dump(final_model, "mlb_run_model.pkl")
+
+#home_mae = mean_absolute_error(
+    #y_test["home_runs"],
+    #preds[:,0]
+#)
+
+#away_mae = mean_absolute_error(
+    #y_test["away_runs"],
+    #preds[:,1]
+#)
+
+#print("Home MAE:", home_mae)
+#print("Away MAE", away_mae)
+#overall_mae = (home_mae + away_mae) / 2
+#print("Overall MAE:", overall_mae)
+
+
+
+#joblib.dump(final_model, "mlb_run_model.pkl")
 
 
 
