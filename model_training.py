@@ -1,4 +1,4 @@
-from game_dataset_builder import game_df
+#from game_dataset_builder import game_df 
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, cross_val_score
@@ -8,6 +8,7 @@ import optuna
 import joblib
 
 #prediction target matrix
+game_df=pd.read_pickle('game_df.pkl')
 y = game_df[["home_runs", "away_runs"]]
 
 X = game_df.drop(columns=[
