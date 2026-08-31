@@ -22,7 +22,7 @@ def get_sagarin_ratings():
 
 
     for year, weight, start, end in seasons:
-        time.sleep(1)
+        time.sleep(5)
         games = statsapi.schedule(start_date=start, end_date=end)
         for game in games:
         # rename first

@@ -11,9 +11,10 @@ import pandas as pd
 
 def build_game_dataset():
 
-    game_level= get_index_games()
+    (game_level, venue_lookup)= get_index_games()
 
     games = []
+   
 
     for game in game_level: #take each game in specified history
 
@@ -37,6 +38,16 @@ def build_game_dataset():
         #get pitchers
         home_sp_id = game["home_sp_id"]
         away_sp_id = game["away_sp_id"]
+
+        #game site
+        venue_id = game["venue_id"]
+        
+        #get park factor
+        park_factor = game["park_factor"]
+
+        #get current form
+        home_form = game["home_form"]
+        away_form = game["away_form"]
 
 
     #starting pitcher mapping loses about 200 games. Take the league avg for those games
@@ -71,8 +82,15 @@ def build_game_dataset():
 
                     #targets 
             "home_runs" : home_runs,
-            "away_runs" : away_runs
+            "away_runs" : away_runs,
             ###"run_diff" : home_runs - away_runs
+
+            "venue": venue_id,
+
+            "park_factor" : park_factor,
+
+            "home_form" : home_form,
+            "away_form" : away_form
         }
         
 
@@ -100,10 +118,12 @@ def build_game_dataset():
 
     game_df = pd.DataFrame(games)
     game_df = game_df.apply(pd.to_numeric, errors= 'coerce') #change the data types to numeric and replace non numeric with nan
-        
-    return game_df
+    print(game_df.columns.to_list())
+
+    return game_df, venue_lookup
 
 if __name__ =="__main__":
-    game_df = build_game_dataset()
+    game_df, venue_lookup = build_game_dataset()
+    print(game_df.columns.tolist())
     game_df.to_pickle('game_df.pkl')
-    print(f"Saved game_df with shape {game_df.shape}")
+    #print(f"Saved game_df with shape {game_df.shape}")

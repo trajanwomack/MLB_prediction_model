@@ -1,6 +1,7 @@
 #from game_dataset_builder import game_df 
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.ensemble import RandomForestRegressor
+#from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import mean_absolute_error
 import pandas as pd
@@ -17,8 +18,8 @@ X = game_df.drop(columns=[
     "home_team",
     "away_team",
     "season",
-    "date/time",
-    "weight"
+    "date/time"
+  
 
  
 ], errors= 'ignore')
@@ -61,13 +62,26 @@ print(X.isnull().sum().sum())
     # 1.suggest params, 2. build model, 3.evaluate, 4. return 
 def objective(trial):
 
-    #define params
+    #define params Random forrest 
+    
     n_estimators = trial.suggest_int('n_estimators', 100, 500)
     max_depth = trial.suggest_int('max_depth', 5, 30)
     min_samples_split = trial.suggest_int('min_samples_split', 2, 20)
     min_samples_leaf = trial.suggest_int('min_samples_leaf', 1, 10)
+   
 
-    #build model w params
+    #define xgboost params
+    """
+    n_estimators = trial.suggest_int('n_estimators', 100, 500)
+    max_depth = trial.suggest_int('max_depth', 3, 10)
+    learning_rate = trial.suggest_float('learning_rate', 0.01, 0.3)
+    subsample = trial.suggest_float('subsample', 0.6, 1.0)
+    colsample_bytree = trial.suggest_float('colsample_bytree', 0.6, 1.0)
+    """
+
+
+    #build rf  model w params
+   
     model = MultiOutputRegressor(
         RandomForestRegressor(
             n_estimators=n_estimators,
@@ -79,6 +93,23 @@ def objective(trial):
 
             )
         )
+
+
+    #build xgboost model 
+    """
+    model = MultiOutputRegressor(
+    XGBRegressor(
+        n_estimators=n_estimators,
+        max_depth=max_depth,
+        learning_rate=learning_rate,
+        subsample=subsample,
+        colsample_bytree=colsample_bytree,
+        random_state=42,
+        n_jobs=-1
+        )
+    )
+    """
+
 
     #cross validation here evalutes mae across both 
     scores = cross_val_score(
@@ -97,6 +128,9 @@ study.optimize(objective, n_trials = 50)
 #final model
 best_params = study.best_trial.params
 
+
+#final random forrest model 
+
 final_model = MultiOutputRegressor(
     RandomForestRegressor(
         n_estimators=best_params['n_estimators'],
@@ -107,6 +141,21 @@ final_model = MultiOutputRegressor(
         n_jobs=-1
     )
 )
+
+#final xgboost model
+"""
+final_model = MultiOutputRegressor(
+    XGBRegressor(
+        n_estimators=best_params['n_estimators'],
+        max_depth=best_params['max_depth'],
+        learning_rate=best_params['learning_rate'],
+        subsample=best_params['subsample'],
+        colsample_bytree=best_params['colsample_bytree'],
+        random_state=42,
+        n_jobs=-1
+    )
+)
+"""
 
 final_model.fit(X_train, y_train)
 
