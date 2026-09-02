@@ -114,6 +114,7 @@ def build_game_dataset():
             row[f"diff_sp_{feature}"] = home_sp_features[feature] - away_sp_features[feature]
 
         games.append(row)
+        print("appended game row")
 
 
     game_df = pd.DataFrame(games)
